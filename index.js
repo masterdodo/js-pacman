@@ -2,6 +2,10 @@ const canvas = document.querySelector('canvas')
 const c = canvas.getContext('2d')
 
 const scoreSpan = document.querySelector('#score')
+const movesSpan = document.querySelector('#moves')
+const minMovesSpan = document.querySelector('#min_moves')
+
+minMovesSpan.innerHTML = localStorage.getItem('moves') || '/'
 
 canvas.width = innerWidth
 canvas.height = innerHeight
@@ -121,6 +125,8 @@ class PowerUp {
 
 
 // CODE
+
+let moves = 0
 
 const pellets = []
 const powerUps = []
@@ -542,6 +548,10 @@ function animate() {
     if (pellets.length === 0) {
         console.log("WIN")
         cancelAnimationFrame(animationId);
+        const min_moves = localStorage.getItem('moves');
+        if (moves < min_moves || min_moves === null) {
+            localStorage.setItem('moves', moves);
+        }
     }
 
     // PLAYER COLLIDES WITH PALLET
@@ -689,18 +699,22 @@ animate()
 addEventListener('keydown', ({ key }) => {
     switch (key) {
         case 'w':
+        case 'W':
             keys.w.pressed = true
             lastKey = 'w'
             break
         case 'a':
+        case 'A':
             keys.a.pressed = true
             lastKey = 'a'
             break
         case 's':
+        case 'S':
             keys.s.pressed = true
             lastKey = 's'
             break
         case 'd':
+        case 'D':
             keys.d.pressed = true
             lastKey = 'd'
             break
@@ -710,16 +724,28 @@ addEventListener('keydown', ({ key }) => {
 addEventListener('keyup', ({ key }) => {
     switch (key) {
         case 'w':
+        case 'W':
             keys.w.pressed = false
+            moves += 1
+            movesSpan.innerHTML = moves
             break
         case 'a':
+        case 'A':
             keys.a.pressed = false
+            moves += 1
+            movesSpan.innerHTML = moves.toString()
             break
         case 's':
+        case 'S':
             keys.s.pressed = false
+            moves += 1
+            movesSpan.innerHTML = moves
             break
         case 'd':
+        case 'D':
             keys.d.pressed = false
+            moves += 1
+            movesSpan.innerHTML = moves
             break
     }
 })
